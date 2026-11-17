@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+
+const int aantalTreinen = 1;
+const int aantalBaanvakken = 4;
+const int aantalWissels = 2;
+typedef struct{
+    bool bezet;
+    int spoorin_1;
+    int spoorin_2;
+    int spooruit_1;
+    int spooruit_2;
+} Wissel;
+
+typedef struct{
+    bool bezet;
+    int wisselIn;
+    int wisselUit;
+} Baanvak;
+
+Baanvak baanvakken[aantalBaanvakken] = {
+    {false,0,0},
+    {false, 0, 1},
+    {false, 0, 1},
+    {false, 1, 0}};
+
+Wissel wissels[aantalWissels] = {
+    {false, 0,0, 1, 2},
+    {false, 1,2, 3,3}};
+
+typedef int[0,aantalTreinen-1] idwaarde;
+chan trein;
+chan geefPositie[aantalTreinen];
+
+int[0,aantalTreinen] meldtZichAan = 0;
+int [0,aantalBaanvakken] spoor;</declaration>
+	<template>
+		<name x="5" y="5">Besturing</name>
+		<declaration>// Place local declarations here.
+void zoekKortsteWeg(){
+}</declaration>
+		<location id="id0" x="-891" y="-552">
+			<name x="-909" y="-586">rust</name>
+		</location>
+		<location id="id1" x="-585" y="-552">
+			<committed/>
+		</location>
+		<location id="id2" x="-356" y="-552">
+			<committed/>
+		</location>
+		<location id="id3" x="-126" y="-552">
+		</location>
+		<init ref="id0"/>
+		<transition id="id4">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="-322" y="-620">ZoekKortsteWeg(spoor)</label>
+			<nail x="-305" y="-594"/>
+			<nail x="-177" y="-594"/>
+		</transition>
+		<transition id="id5">
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-552" y="-603">geefPositie[meldtZichAan]!</label>
+			<nail x="-526" y="-586"/>
+			<nail x="-441" y="-586"/>
+		</transition>
+		<transition id="id6">
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-764" y="-603">trein?</label>
+			<nail x="-840" y="-586"/>
+			<nail x="-619" y="-586"/>
+		</transition>
+	</template>
+	<template>
+		<name>Trein</name>
+		<parameter>idwaarde id, int[0,aantalBaanvakken-1] baanvak</parameter>
+		<declaration>int[0,aantalBaanvakken] eigenSpoor;
+
+void initialize(){
+    baanvakken[baanvak].bezet = true;
+    eigenSpoor = baanvak;
+}</declaration>
+		<location id="id7" x="-943" y="-17">
+			<committed/>
+		</location>
+		<location id="id8" x="-238" y="-17">
+		</location>
+		<location id="id9" x="-229" y="119">
+			<committed/>
+		</location>
+		<init ref="id7"/>
+		<transition id="id10">
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-339" y="-68">geefPositie[id]?</label>
+			<label kind="assignment" x="-339" y="-51">spoor = eigenSpoor</label>
+			<nail x="-357" y="-85"/>
+			<nail x="-425" y="-212"/>
+			<nail x="-331" y="-238"/>
+			<nail x="-263" y="-187"/>
+			<nail x="-238" y="-110"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-233" y="34">trein!</label>
+		</transition>
+		<transition id="id12">
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="assignment" x="-186" y="51">meldtZichAan = id</label>
+			<nail x="-178" y="34"/>
+			<nail x="-144" y="42"/>
+			<nail x="-110" y="119"/>
+			<nail x="-220" y="153"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="assignment" x="-935" y="0">initialize()</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+t = Trein(0,0);
+// List one or more processes to be composed into a system.
+system t,Besturing;
+</system>
+	<queries>
+		<query>
+			<formula/>
+			<comment/>
+		</query>
+	</queries>
+</nta>
